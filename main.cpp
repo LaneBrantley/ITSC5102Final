@@ -6,6 +6,7 @@
 #include <string>
 using namespace std;
 #include <random>
+#include <cstring>
 
 // std::transform(input.begin(), input.end(), input.begin(),
 // [](unsigned char c){ return std::tolower(c); }); .tolower wasn't working so had to find another method of changing to lowercase, found this on stackoverflow
@@ -13,6 +14,14 @@ using namespace std;
 
 std::vector<Customer> customerArray;  // vector to store customers in order to store their information to be accessed
 Customer currCus; // Customer that is accessed by the program to call during the program
+
+//Method to transform strings to lowercase, used with input so if user inputs "Q" or "q", it will still work. 
+std::string lowercase(std::string& phrase) {
+    std::string result = phrase;
+    std::transform(result.begin(), result.end(), result.begin(),
+                   [](unsigned char c) { return std::tolower(c); });
+    return result;
+}
 
 void createAccount() {
     std::string username, password, name;
@@ -37,10 +46,10 @@ void createAccount() {
 //Function that handles logging into account
 bool attemptLogin() {
     std::string input, username, password; // Variables necessary for login
-    while (input.compare("Q") != 0) { //Q is the quit button, so when input is "Q", the loop breaks and ends
-        std::cout << "Login: Enter username\nIf you do not have an account, please enter \"Sign up\"\nEnter \"Q\" to quit: " << std::endl;
+    while (lowercase(input) != "q") { //Q is the quit button, so when input is "Q", the loop breaks and ends
+        std::cout << "Login: Enter username\nIf you do not have an account, please enter \"Sign up\"\nEnter \"q\" to quit: " << std::endl;
         std::getline(std::cin, input);
-        if (input == "Sign up") { // Calls the createAccount method to create a new customer object 
+        if (lowercase(input) == "sign up") { // Calls the createAccount method to create a new customer object 
             createAccount();
         } 
         else { // If it is a username, goes through algorithm to find customer
@@ -56,7 +65,7 @@ bool attemptLogin() {
             if (foundUsername) { //If one of the customers in the vector matches the username entered, password is verified
                 std::cout << "Enter password: ";
                 std::cin >> password;
-                if (password.compare(tempCus.password) == 0) {
+                if (password == tempCus.password) {
                     std::cout << "Login successful!\n";
                     currCus = tempCus; // If password is correct, currCus copies the object's information to allow modification
                     return true; // Returns true to allow mainProgram() to go into the if block 
@@ -66,7 +75,7 @@ bool attemptLogin() {
                     std::cin.ignore();
                 }
             } 
-            else if (input == "Q") {
+            else if (lowercase(input) == "q") {
                 return false; //Returns false if q is entered, causing the program to end. 
             }
             else {
@@ -81,7 +90,7 @@ void mainProgram() {
     std::string input;
     if (attemptLogin()) { //If attemptLogin() returns true: 
 
-        while (input != "q") { //If q is entered, the app shuts down
+        while (lowercase(input) != "q") { //If q is entered, the app shuts down
 
             //Input to determine what the user wants to do
             std::cout << "Name: " << currCus.name << std::endl;
@@ -90,17 +99,17 @@ void mainProgram() {
             std::getline(std::cin, input);
 
             //Calls withdraw method on the customer object
-            if (input == "w") {
+            if (lowercase(input) == "w") {
                 currCus.withdraw();
             }
 
             //Calls deposit on the customer object
-            else if (input == "d") {
+            else if (lowercase(input) == "d") {
                 currCus.deposit();
             }
 
             //Calls getAccountNumber on customer object
-            else if (input == "n") {
+            else if (lowercase(input) == "n") {
                 currCus.getAccNumber();
             }
         }
