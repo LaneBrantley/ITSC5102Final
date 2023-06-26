@@ -8,12 +8,9 @@ using namespace std;
 #include <random>
 #include <cstring>
 
-// std::transform(input.begin(), input.end(), input.begin(),
-// [](unsigned char c){ return std::tolower(c); }); .tolower wasn't working so had to find another method of changing to lowercase, found this on stackoverflow
-//LOWERCASE FUNCTION
 
 std::vector<Customer> customerArray;  // vector to store customers in order to store their information to be accessed
-Customer *currCus; // Reference variable of a customer object. Used to allow login and manipulation to reflect on the actual object
+Customer *currCus; // Pointer variable of a customer object. Used to allow login and manipulation to reflect on the actual object
 
 //Method to transform strings to lowercase, used with input so if user inputs "Q" or "q", it will still work. 
 std::string lowercase(std::string& phrase) {
@@ -83,7 +80,7 @@ bool attemptLogin() {
                 std::cin >> password;
                 if (password == tempPassword) {
                     std::cout << "Login successful!\n";
-                    currCus = &customerArray[index]; // If password is correct, currCus becomes a reference variable to it
+                    currCus = &customerArray[index]; // If password is correct, currCus becomes a pointer variable to the actual Customer object
                     return true; // Returns true to allow mainProgram() to go into the if block 
                 } 
                 else {
