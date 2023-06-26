@@ -13,7 +13,7 @@ using namespace std;
 //LOWERCASE FUNCTION
 
 std::vector<Customer> customerArray;  // vector to store customers in order to store their information to be accessed
-Customer currCus; // Customer that is accessed by the program to call during the program
+Customer *currCus; // Reference variable of a customer object. Used to allow login and manipulation to reflect on the actual object
 
 //Method to transform strings to lowercase, used with input so if user inputs "Q" or "q", it will still work. 
 std::string lowercase(std::string& phrase) {
@@ -68,20 +68,22 @@ bool attemptLogin() {
             createAccount();
         } 
         else { // If it is a username, goes through algorithm to find customer
+            int index;
             bool foundUsername = false;
-            Customer tempCus;
+            std::string tempPassword;
             for (int i = 0; i < customerArray.size(); i++) { //Loops through customer vector. Using same loop as foundUsername() but also needs the customer object so needs to be here as well
                 if (customerArray[i].username == input) {
                     foundUsername = true;
-                    tempCus = customerArray[i]; // Copies object to tempCus to allow for password checking
+                    tempPassword = customerArray[i].password; // Copies object's password to tempPassword to allow for password checking
+                    index = i;
                 }
             }
             if (foundUsername) { //If one of the customers in the vector matches the username entered, password is verified
                 std::cout << "Enter password: ";
                 std::cin >> password;
-                if (password == tempCus.password) {
+                if (password == tempPassword) {
                     std::cout << "Login successful!\n";
-                    currCus = tempCus; // If password is correct, currCus copies the object's information to allow modification
+                    currCus = &customerArray[index]; // If password is correct, currCus becomes a reference variable to it
                     return true; // Returns true to allow mainProgram() to go into the if block 
                 } 
                 else {
@@ -107,24 +109,24 @@ void mainProgram() {
         while (lowercase(input) != "q") { //If q is entered, the app shuts down
 
             //Input to determine what the user wants to do
-            std::cout << "Name: " << currCus.name << std::endl;
-            currCus.getBalance();
+            std::cout << "Name: " << currCus->name << std::endl;
+            currCus->getBalance();
             std::cout << "What would you like to do? Enter \"d\" for deposit, \"w\" for withdraw, \"n\" for account number, \"q\" to quit: ";
             std::getline(std::cin, input);
 
             //Calls withdraw method on the customer object
             if (lowercase(input) == "w") {
-                currCus.withdraw();
+                currCus->withdraw();
             }
 
             //Calls deposit on the customer object
             else if (lowercase(input) == "d") {
-                currCus.deposit();
+                currCus->deposit();
             }
 
             //Calls getAccountNumber on customer object
             else if (lowercase(input) == "n") {
-                currCus.getAccNumber();
+                currCus->getAccNumber();
             }
         }
         std::cout << "Thank you for using our bank! Goodbye. ";
