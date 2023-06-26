@@ -23,12 +23,26 @@ std::string lowercase(std::string& phrase) {
     return result;
 }
 
+bool foundUsername(std::string username) {
+    bool foundUsername = false;
+    for (int i = 0; i < customerArray.size(); i++) { //Loops through customer vector
+        if (customerArray[i].username == username) {
+            foundUsername = true;
+        }
+    }
+    return foundUsername;
+}
+
 void createAccount() {
     std::string username, password, name;
     std::cout << "Enter your name, first only: ";
     std::cin >> name;
     std::cout << "Enter your username. Make sure to get it right, as when entered it cannot be changed: ";
     std::cin >> username;
+    while (foundUsername(username)) {
+        std::cout << "Username already in use. Please try again: ";
+        std::cin >> username;
+    }
     std::cout << "Enter your password. Make sure to remember it, as there is no way to access it otherwise: ";
     std::cin >> password;
 

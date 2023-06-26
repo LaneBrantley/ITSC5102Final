@@ -23,12 +23,27 @@ std::string lowercase(std::string& phrase) {
     return result;
 }
 
+//Method for looping through array to find username of user. Used in createAccount() and attemptLogin()
+bool foundUsername(std::string username) {
+    bool foundUsername = false;
+    for (int i = 0; i < customerArray.size(); i++) { //Loops through customer vector
+        if (customerArray[i].username == username) {
+            foundUsername = true;
+        }
+    }
+    return foundUsername;
+}
+
 void createAccount() {
     std::string username, password, name;
     std::cout << "Enter your name, first only: ";
     std::cin >> name;
     std::cout << "Enter your username. Make sure to get it right, as when entered it cannot be changed: ";
     std::cin >> username;
+    while (foundUsername(username)) { //Checks to see if username already exists
+        std::cout << "Username already in use. Please try again: ";
+        std::cin >> username;
+    }
     std::cout << "Enter your password. Make sure to remember it, as there is no way to access it otherwise: ";
     std::cin >> password;
 
@@ -55,11 +70,10 @@ bool attemptLogin() {
         else { // If it is a username, goes through algorithm to find customer
             bool foundUsername = false;
             Customer tempCus;
-            for (int i = 0; i < customerArray.size(); i++) { //Loops through customer vector
+            for (int i = 0; i < customerArray.size(); i++) { //Loops through customer vector. Using same loop as foundUsername() but also needs the customer object so needs to be here as well
                 if (customerArray[i].username == input) {
                     foundUsername = true;
                     tempCus = customerArray[i]; // Copies object to tempCus to allow for password checking
-                    break;
                 }
             }
             if (foundUsername) { //If one of the customers in the vector matches the username entered, password is verified
